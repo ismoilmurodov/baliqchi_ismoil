@@ -7,6 +7,10 @@ from aiogram.fsm.state import StatesGroup, State
 from keyboards import language_kb, phone_kb, skip_kb
 from middlewares import LanguageMiddleware
 
+from aiogram import Router
+from aiogram import types
+from aiogram.filters import Command
+from aiogram.types import Message 
 router = Router()
 
 # Botning barcha tillari
@@ -21,7 +25,8 @@ class Registration(StatesGroup):
 
 
 # /start komandasini qayta ishlash
-@router.message(CommandStart("/start"))
+# @router.message(CommandStart("/start"))
+@router.message(Command(commands=["start"]))
 async def start_command(message: Message, state: FSMContext):
     await message.answer("Salom! Tilni tanlang:", reply_markup=language_kb)
 
