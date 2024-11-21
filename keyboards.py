@@ -1,10 +1,10 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton,ReplyKeyboardRemove
 
 # Tilni tanlash uchun klaviatura
 language_kb = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="🇺🇿 O'zbek")],
     [KeyboardButton(text="🇷🇺 Русский")]
-], resize_keyboard=True)
+], resize_keyboard=True,ReplyKeyboardRemove=True)
 
 # Telefon raqamini ulashish uchun klaviatura
 phone_kb = ReplyKeyboardMarkup(keyboard=[

@@ -10,7 +10,8 @@ from middlewares import LanguageMiddleware
 from aiogram import Router
 from aiogram import types
 from aiogram.filters import Command
-from aiogram.types import Message 
+from aiogram.types import Message
+
 router = Router()
 
 # Botning barcha tillari
@@ -20,8 +21,8 @@ languages = {"🇺🇿 O'zbek": "uz", "🇷🇺 Русский": "ru"}
 # Holatlarni yaratish
 class Registration(StatesGroup):
     name = State()
-    phone = State()
-    birthdate = State()
+    contact_number = State()
+    birthday = State()
 
 
 # /start komandasini qayta ishlash
@@ -45,42 +46,46 @@ async def choose_language(message: Message, state: FSMContext):
 async def ask_name(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
     await message.answer("Telefon raqamingizni ulashing yoki qo'lda kiriting:", reply_markup=phone_kb)
-    await state.set_state(Registration.phone)
+    await state.set_state(Registration.contact_number)
 
 
-# Telefon raqamni so'rash
-@router.message(Registration.phone)
+@router.message(Registration.contact_number)
 async def ask_phone(message: Message, state: FSMContext):
+    # Agar foydalanuvchi tugma orqali ulashsa
     if message.contact:
-        phone = message.contact.phone_number
+        contact_number = message.contact.phone_number
     else:
-        phone = message.text
+        contact_number = message.text
 
-    if len(phone) == 9 and phone.isdigit():
-        await state.update_data(phone=phone)
+    # Telefon raqamni tekshirish
+    if contact_number.startswith("+998") and len(contact_number[4:]) == 9 and contact_number[4:].isdigit():
+        await state.update_data(contact_number=contact_number)
         await message.answer("Tug'ilgan sanangizni kiriting yoki o'tkazib yuboring:", reply_markup=skip_kb)
-        await state.set_state(Registration.birthdate)
+        await state.set_state(Registration.birthday)
     else:
-        await message.answer("Telefon raqam noto'g'ri! Qaytadan kiriting:")
+        await message.answer(
+            "Telefon raqam noto'g'ri formatda! "
+            "Raqamni quyidagi formatda kiriting: +998901234567"
+        )
 
 
 # Tug'ilgan sanani so'rash
-@router.message(Registration.birthdate)
+@router.message(Registration.birthday)
 async def ask_birthdate(message: Message, state: FSMContext):
     if message.text.lower() == "❌ o'tkazib yuborish":
-        birthdate = None
+        birthday = None
     else:
-        birthdate = message.text
+        birthday = message.text
 
-    await state.update_data(birthdate=birthdate)
+    await state.update_data(birthday=birthday)
 
     # Malumotlarni olish
     data = await state.get_data()
     data["tg_id"] = message.from_user.id
     await message.answer(f"Ro'yxatdan o'tdingiz!\n\n"
                          f"Ism: {data['name']}\n"
-                         f"Telefon: {data['phone']}\n"
-                         f"Tug'ilgan sana: {data.get('birthdate', "Ko'rsatilmagan")}")
+                         f"Telefon: {data['contact_number']}\n"
+                         f"Tug'ilgan sana: {data.get('birthday', "Ko'rsatilmagan")}")
 
     await state.clear()
     print(data)

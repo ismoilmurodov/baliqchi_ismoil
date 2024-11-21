@@ -17,7 +17,7 @@ async def main():
     try:
         await dp.start_polling(bot, skip_updates=True)  # Skip updates on startup
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
+        pass
 
 if __name__ == "__main__":
     asyncio.run(main())
