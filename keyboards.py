@@ -19,9 +19,9 @@ phone_kb_ru = ReplyKeyboardMarkup(keyboard=[
 # O'tkazib yuborish tugmasi uchun klaviatura
 skip_kb = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="❌ O'tkazib yuborish")]
-], resize_keyboard=True)
+], resize_keyboard=True,input_field_placeholder="DD-MM-YYYY")
 
 # O'tkazib yuborish tugmasi uchun klaviatura (ru)
 skip_kb_ru = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="❌ пропустить")]
-],resize_keyboard=True)
+],resize_keyboard=True,input_field_placeholder="DD-MM-YYYY")
