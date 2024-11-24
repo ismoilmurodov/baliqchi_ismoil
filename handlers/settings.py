@@ -1,36 +1,37 @@
 from aiogram import Router
-from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State
-from aiogram.fsm import StateGroup
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup
 
 from handlers.feedback import ADMIN_ID
-from middlewares import LanguageMiddleware
 from keyboard.kb_settings import settings_kb_uz, settings_kb_ru
+from middlewares import LanguageMiddleware
 
 router = Router()
 
 
 # Sozlamalar uchun holatlar
-class SettingsState(StateGroup):
+class SettingsState(StatesGroup):
     phone_change = State()  # Telefon raqami o'zgartirish
     language_change = State()  # Til o'zgartirish
     name_change = State()  # Ism o'zgartirish
     birthday_change = State()  # Tug'ilgan kun o'zgartirish
 
 
-# "Sozlamalar" tugmasi bosilganda
-@router.message(text=["⚙️ Sozlamalar", "⚙️ Настройки"])
+@router.message(lambda message: message.text in ["⚙️ Sozlamalar", "⚙️ Настройки"])
 async def settings_menu(message: Message):
     lang = LanguageMiddleware.get_language(message.from_user.id)
+
     if lang == "uz":
+        # In the Uzbek language, you can send a message with a keyboard.
         await message.answer("Quyidagi sozlamalarni o'zgartirishingiz mumkin:", reply_markup=settings_kb_uz)
     elif lang == "ru":
+        # In the Russian language, you can send a message with a keyboard.
         await message.answer("Вы можете изменить следующие настройки:", reply_markup=settings_kb_ru)
 
 
 # "Telefon raqamni o'zgartirish" ni bosganda
-@router.message(text=["📞 Telefon raqamni o'zgartirish", "📞 Изменить номер телефона"])
+@router.message(lambda message: message.text in ["📞 Telefon raqamni o'zgartirish", "📞 Изменить номер телефона"])
 async def change_phone_number(message: Message, state: FSMContext):
     lang = LanguageMiddleware.get_language(message.from_user.id)
     if lang == "uz":
@@ -41,7 +42,7 @@ async def change_phone_number(message: Message, state: FSMContext):
 
 
 # Telefon raqamini tasdiqlash va bosh menyuga qaytish
-@router.message(state=SettingsState.phone_change)
+@router.message(SettingsState.phone_change)
 async def handle_phone_change(message: Message, state: FSMContext):
     contact_number = message.text.strip()
     lang = LanguageMiddleware.get_language(message.from_user.id)
@@ -70,7 +71,7 @@ async def handle_phone_change(message: Message, state: FSMContext):
 
 
 # "Tilni o'zgartirish" ni bosganda
-@router.message(text=["🌍 Tilni o'zgartirish", "🌍 Изменить язык"])
+@router.message(lambda message: message.text in ["🌍 Tilni o'zgartirish", "🌍 Изменить язык"])
 async def change_language(message: Message, state: FSMContext):
     # Determine the user's current language
     lang = LanguageMiddleware.get_language(message.from_user.id)
@@ -100,7 +101,7 @@ async def change_language(message: Message, state: FSMContext):
 
 
 # Tilni o'zgartirish
-@router.message(state=SettingsState.language_change)
+@router.message(SettingsState.language_change)
 async def handle_language_change(message: Message, state: FSMContext):
     language = message.text.strip().lower()
     if language == "o'zbek" or language == "узбек":
@@ -117,7 +118,7 @@ async def handle_language_change(message: Message, state: FSMContext):
 
 
 # "Ismni o'zgartirish" ni bosganda
-@router.message(text=["✍️ Ismni o'zgartirish", "✍️ Изменить имя"])
+@router.message(lambda message: message.text in ["✍️ Ismni o'zgartirish", "✍️ Изменить имя"])
 async def change_name(message: Message, state: FSMContext):
     lang = LanguageMiddleware.get_language(message.from_user.id)
     if lang == "uz":
@@ -128,7 +129,7 @@ async def change_name(message: Message, state: FSMContext):
 
 
 # Ismni yangilash
-@router.message(state=SettingsState.name_change)
+@router.message(SettingsState.name_change)
 async def handle_name_change(message: Message, state: FSMContext):
     new_name = message.text.strip()
     lang = LanguageMiddleware.get_language(message.from_user.id)
@@ -149,7 +150,7 @@ async def handle_name_change(message: Message, state: FSMContext):
 
 
 # "Tug'ilgan kunni qo'shish" ni bosganda
-@router.message(text=["🎂 Tug'ilgan kunni qo'shish", "🎂 Добавить дату рождения"])
+@router.message(lambda message: message.text in ["🎂 Tug'ilgan kunni qo'shish", "🎂 Добавить дату рождения"])
 async def change_birthday(message: Message, state: FSMContext):
     lang = LanguageMiddleware.get_language(message.from_user.id)
     if lang == "uz":
@@ -160,7 +161,7 @@ async def change_birthday(message: Message, state: FSMContext):
 
 
 # Tug'ilgan kunni o'zgartirish
-@router.message(state=SettingsState.birthday_change)
+@router.message(SettingsState.birthday_change)
 async def handle_birthday_change(message: Message, state: FSMContext, ADMIN_ID=None):
     birthday = message.text.strip()
     lang = LanguageMiddleware.get_language(message.from_user.id)
@@ -190,7 +191,7 @@ async def handle_birthday_change(message: Message, state: FSMContext, ADMIN_ID=N
 
 
 # "Orqaga" tugmasi bosganda
-@router.message(text=["🔙 Orqaga", "🔙 Назад"])
+@router.message(lambda message: message.text in ["🔙 Orqaga", "🔙 Назад"])
 async def go_back_to_main_menu(message: Message, state: FSMContext):
     lang = LanguageMiddleware.get_language(message.from_user.id)
     if lang == "uz":

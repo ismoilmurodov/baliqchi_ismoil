@@ -1,20 +1,39 @@
+from aiogram import types
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-# O'zbek tilidagi tugmalar
-location_kb_uz = ReplyKeyboardMarkup(resize_keyboard=True)
-location_kb_uz.add(
-    KeyboardButton("📍 Joylashuvlar ro'yxati"),
-    KeyboardButton("📍 Joylashuvni jo'natish", request_location=True)
+# O'zbek tilidagi tugmalar (Uzbek language buttons)
+location_kb_uz = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text="📍 Joylashuvlar ro'yxati", ),  # Locations list
+            KeyboardButton(text="📍 Joylashuvni jo'natish", )  # Send location
+        ]
+    ],
+    resize_keyboard=True
 )
 
-# Rus tilidagi tugmalar
-location_kb_ru = ReplyKeyboardMarkup(resize_keyboard=True)
-location_kb_ru.add(
-    KeyboardButton("📍 Список местоположений"),
-    KeyboardButton("📍 Отправить местоположение", request_location=True)
+# Rus tilidagi tugmalar (Russian language buttons)
+location_kb_ru = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text="📍 Список местоположений"),  # Locations list
+            KeyboardButton(text="📍 Отправить местоположение", )  # Send location
+        ]
+    ],
+    resize_keyboard=True
 )
 
+# Example for adding additional buttons (like feedback) to the main menu:
+# main_menu_kb_uz = ReplyKeyboardMarkup(
+#     keyboard=[
+#         [KeyboardButton("✍️ Izoh qoldirish")]  # Leave a comment
+#     ],
+#     resize_keyboard=True
+# )
 
-# # O'zbek va Rus tillaridagi tugmalar allaqachon mavjud
-# main_menu_kb_uz.add(KeyboardButton("✍️ Izoh qoldirish"))
-# main_menu_kb_ru.add(KeyboardButton("✍️ Оставить отзыв"))
+# main_menu_kb_ru = ReplyKeyboardMarkup(
+#     keyboard=[
+#         [KeyboardButton("✍️ Оставить отзыв")]  # Leave a review
+#     ],
+#     resize_keyboard=True
+# )

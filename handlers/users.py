@@ -1,18 +1,14 @@
-from aiogram import Router, types
-from aiogram.types import Message, ReplyKeyboardRemove
-from aiogram.filters import Command, CommandStart
+import re
+
+from aiogram import Router
+from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
+from aiogram.types import Message
+from aiogram.types import ReplyKeyboardRemove
 
 from keyboards import language_kb, phone_kb, skip_kb, phone_kb_ru, skip_kb_ru
 from middlewares import LanguageMiddleware
-
-from aiogram import Router
-from aiogram import types
-from aiogram.filters import Command
-from aiogram.types import Message
-
-import re
 
 router = Router()
 

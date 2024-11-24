@@ -1,20 +1,25 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-# Sozlamalar tugmalari
-settings_kb_uz = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-settings_kb_uz.add(
-    KeyboardButton("📞 Telefon raqamni o'zgartirish"),
-    KeyboardButton("🌍 Tilni o'zgartirish"),
-    KeyboardButton("✍️ Ismni o'zgartirish"),
-    KeyboardButton("🎂 Tug'ilgan kunni qo'shish"),
-    KeyboardButton("🔙 Orqaga")
+# Sozlamalar tugmalari - Uzbek version
+settings_kb_uz = ReplyKeyboardMarkup(
+    resize_keyboard=True,
+    keyboard=[
+        [KeyboardButton(text="📞 Telefon raqamni o'zgartirish")],
+        [KeyboardButton(text="🌍 Tilni o'zgartirish")],
+        [KeyboardButton(text="✍️ Ismni o'zgartirish")],
+        [KeyboardButton(text="🎂 Tug'ilgan kunni qo'shish")],
+        [KeyboardButton(text="🔙 Orqaga")]
+    ]
 )
 
-settings_kb_ru = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-settings_kb_ru.add(
-    KeyboardButton("📞 Изменить номер телефона"),
-    KeyboardButton("🌍 Изменить язык"),
-    KeyboardButton("✍️ Изменить имя"),
-    KeyboardButton("🎂 Добавить дату рождения"),
-    KeyboardButton("🔙 Назад")
+# Sozlamalar tugmalari - Russian version
+settings_kb_ru = ReplyKeyboardMarkup(
+    resize_keyboard=True,
+    keyboard=[
+        [KeyboardButton(text="📞 Изменить номер телефона")],
+        [KeyboardButton(text="🌍 Изменить язык")],
+        [KeyboardButton(text="✍️ Изменить имя")],
+        [KeyboardButton(text="🎂 Добавить дату рождения")],
+        [KeyboardButton(text="🔙 Назад")]
+    ]
 )
