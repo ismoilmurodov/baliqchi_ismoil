@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 # Tilni tanlash uchun klaviatura
 language_kb = ReplyKeyboardMarkup(keyboard=[
@@ -19,9 +19,46 @@ phone_kb_ru = ReplyKeyboardMarkup(keyboard=[
 # O'tkazib yuborish tugmasi uchun klaviatura
 skip_kb = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="❌ O'tkazib yuborish")]
-], resize_keyboard=True,input_field_placeholder="DD-MM-YYYY")
+], resize_keyboard=True, input_field_placeholder="DD-MM-YYYY")
 
 # O'tkazib yuborish tugmasi uchun klaviatura (ru)
 skip_kb_ru = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="❌ пропустить")]
-],resize_keyboard=True,input_field_placeholder="DD-MM-YYYY")
+], resize_keyboard=True, input_field_placeholder="DD-MM-YYYY")
+
+
+# Asosiy menu tugmalari (O'zbek tilida)
+main_menu_kb = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text="📋 Menu"),
+            KeyboardButton(text="🛍 Buyurtmalar tarixi"),
+        ],
+        [
+            KeyboardButton(text="✍️ Izoh qoldirish"),
+            KeyboardButton(text="⚙️ Sozlamalar"),
+        ],
+        [
+            KeyboardButton(text="🏨 Xonalar haqida ma'lumot"),
+        ],
+    ],
+    resize_keyboard=True
+)
+
+# Asosiy menu tugmalari (Rus tilida)
+main_menu_kb_ru = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text="📋 Меню"),
+            KeyboardButton(text="🛍 История заказов"),
+        ],
+        [
+            KeyboardButton(text="✍️ Оставить отзыв"),
+            KeyboardButton(text="⚙️ Настройки"),
+        ],
+        [
+            KeyboardButton(text="🏨 Информация о номерах"),
+        ],
+    ],
+    resize_keyboard=True
+)
