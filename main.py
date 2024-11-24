@@ -5,7 +5,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 
 from handlers import register_handlers
 
-bot = Bot(token="8061558107:AAFpRmaYrXQQnfsx3rq0_RIr3ksvxRzvf0k")
+bot = Bot(token="7355432517:AAGkKqV35rOxW_LQ6E8kCGrwtV7Wjc9VrNY")
 dp = Dispatcher(storage=MemoryStorage())
 
 
@@ -15,8 +15,9 @@ async def main():
     # await set_commands(bot)
 
     try:
-        await dp.start_polling(bot, skip_updates=True)  # Skip updates on startup
+        await dp.start_polling(bot, skip_updates=True)
     except Exception as e:
+        print(e)
         pass
 
 

@@ -6,12 +6,10 @@ language_kb = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="🇷🇺 Русский")]
 ], resize_keyboard=True, ReplyKeyboardRemove=True)
 
-# Telefon raqamini ulashish uchun klaviatura
 phone_kb = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="📱 Telefon raqamni ulashish", request_contact=True)]
 ], resize_keyboard=True, one_time_keyboard=True)
 
-# Telefon raqamini ulashish uchun klaviatura(ru)
 phone_kb_ru = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="📱 Поделитесь своим номером телефона", request_contact=True)]
 ], resize_keyboard=True, one_time_keyboard=True)
@@ -23,9 +21,8 @@ skip_kb = ReplyKeyboardMarkup(keyboard=[
 
 # O'tkazib yuborish tugmasi uchun klaviatura (ru)
 skip_kb_ru = ReplyKeyboardMarkup(keyboard=[
-    [KeyboardButton(text="❌ пропустить")]
+    [KeyboardButton(text="❌ Пропустить")]
 ], resize_keyboard=True, input_field_placeholder="DD-MM-YYYY")
-
 
 # Asosiy menu tugmalari (O'zbek tilida)
 main_menu_kb = ReplyKeyboardMarkup(

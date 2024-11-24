@@ -1,5 +1,3 @@
-from aiogram.types import CallbackQuery, Message
-
 class LanguageMiddleware:
     user_language = {}
 

@@ -1,22 +1,5 @@
-# import requests
-#
-# # Define the URL and data
-# url = "http://talaba.turin.uz/fish/api/v1/client-profile/"
-# data = {
-#     "username": "string",
-#     "contact_number": "string",
-#     "birthday": "2024-11-22",
-#     "user_tg_id": "string"
-# }
-#
-# # Send the POST request
-# response = requests.post(url, json=data)
-#
-# # Print the response
-# print(f"Status Code: {response.status_code}")
-# print(f"Response Body: {response.text}")
-# print(response.json())
 import requests
+
 
 def send_post_profile(data):
     url = "https://talaba.turin.uz/fish/api/v1/client-profile/"
@@ -29,13 +12,9 @@ def send_post_profile(data):
         print(f"An error occurred: {e}")
         return None
 
-# Example usage
-
-import requests
 
 def send_post_request(data):
     url = "http://talaba.turin.uz/fish/api/v1/client-profile/"
-
 
     try:
         response = requests.post(url, json=data)
@@ -45,17 +24,40 @@ def send_post_request(data):
         print(f"An error occurred: {e}")
         return None
 
-# # Example usage
-# data = {
-#     "username": "string",
-#     "contact_number": "string",
-#     "birthday": "2024-11-22",
-#     "user_tg_id": "string"
-# }
-#
-# response = send_post_request(data)
-#
-# if response:
-#     print(f"Status Code: {response.status_code}")
-#     print(f"Response Body: {response.text}")
-#
+
+def get_categories():
+    url = "http://talaba.turin.uz/fish/api/v1/categories/"
+
+    try:
+        response = requests.get(url)
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            return response.json()  # Return the JSON data from the response
+        else:
+            print(f"Request failed with status code: {response.status_code}")
+            return None
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+
+
+# Function to fetch products from the API based on the category
+async def fetch_products_by_category(category: str):
+    url = f"http://talaba.turin.uz/fish/api/v1/categories/{category}/products/"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('products', [])
+    else:
+        return []  # Return an empty list if the API request fails
+
+
+async def fetch_product_details(category: str, product_name: str):
+    url = f"http://talaba.turin.uz/fish/api/v1/categories/{category}/{product_name}/"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        return response.json().get('product', {})
+    else:
+        return None  # Return None if the API request fails
