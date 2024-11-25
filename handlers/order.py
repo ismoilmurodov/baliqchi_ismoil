@@ -1,12 +1,12 @@
 from aiogram import Router
-from aiogram import types
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.types import Message
 
 from back_end import get_categories, fetch_products_by_category, fetch_product_details
 from handlers.menu import create_default_keyboard
+from keyboards import main_menu_kb, main_menu_kb_ru
 from middlewares import LanguageMiddleware
 from state.order_state import OrderState
 
@@ -16,47 +16,42 @@ router = Router()
 @router.message(OrderState.category)
 async def product_handler(message: Message, state: FSMContext):
     lang = LanguageMiddleware.get_language(message.from_user.id)
-    category = message.text
-    await state.update_data(category=category)
 
-    products = await fetch_products_by_category(category)
-    if lang == "uz":
-        data = ["⬅️ Qaytish"]
-
-        data += [product['name'] for product in products]
-        keyboard = create_default_keyboard(data)
-
-        await message.answer("Maxsulotlar", reply_markup=keyboard)
-
+    if message.text in ["⬅️ Qaytish", "⬅️ Назад"]:
+        message_context = "Asosiy menu" if lang == 'uz' else "Выбирайте категории"
+        await message.answer(message_context, reply_markup=main_menu_kb if lang == 'uz' else main_menu_kb_ru)
+        await state.clear()
 
     else:
-        data = ["⬅️ Назад"]
+        category = message.text
+        await state.update_data(category=category)
 
-        data += [product['name'] for product in products]
+        products = await fetch_products_by_category(category)
+        data = [product['name'] for product in products]
+        data += ["⬅️ Qaytish"] if lang == 'uz' else ["⬅️ Назад"]
         keyboard = create_default_keyboard(data)
 
-        await message.answer("Продукты", reply_markup=keyboard)
+        m_contest = "Maxsulotlar" if lang == 'uz' else "Продукты"
 
-    await state.set_state(OrderState.product)
+        await message.answer(m_contest, reply_markup=keyboard)
+
+        await state.set_state(OrderState.product)
 
 
-# Handler for when the user selects a product
 @router.message(OrderState.product)
-async def product_order(message: Message, state: FSMContext):
+async def product_order_handler(message: Message, state: FSMContext):
     lang = LanguageMiddleware.get_language(message.from_user.id)
     if message.text in ["⬅️ Qaytish", "⬅️ Назад"]:
-        if lang == "uz":
-            confirmation_text = "Kategoriyalarni tanlang"
-            data = ['📥 Korzinka']
-        else:
-            confirmation_text = "Выбирайте категории"
-            data = ['📥 Корзина']
+        data = ['📥 Korzinka'] if lang == 'uz' else ['📥 Корзина']
 
         categories = get_categories()
         data += [category['name'] for category in categories['categories']]
 
+        data += ["⬅️ Qaytish"] if lang == 'uz' else ["⬅️ Назад"]
         keyboard = create_default_keyboard(data)
 
+        confirmation_text = "Kategoriyalarni tanlang" if lang == 'uz' else "Выбирайте категории"
+        print(data)
         await message.answer(confirmation_text, reply_markup=keyboard)
         await state.set_state(OrderState.category)
     else:
@@ -74,22 +69,27 @@ async def product_order(message: Message, state: FSMContext):
             product_name = product_data.get('name', 'Unknown Product')
             description = product_data.get('description', 'No description available')
             price = product_data.get('price', '0')
-            image_url = f"http://talaba.turin.uz/fish{product_data.get('image', '')}"
+            image_url = f"http://talaba.turin.uz{product_data.get('image', '')}"
 
-            # Prepare the product caption with details
             product_caption = f"✨ <b>Название:</b> {product_name}\n" \
                               f"📜 <b>Описание:</b> {description}\n" \
                               f"💲 <b>Итог:</b> {price} UZS\n"
 
             # Set initial quantity to 1
             quantity = 1
-            await message.answer("Выберите количество продукта", reply_markup=types.ReplyKeyboardRemove())
+            kb_name = "⬅️ Qaytish" if lang == 'uz' else "⬅️ Назад"
+            kb_back = ReplyKeyboardMarkup(
+                keyboard=[[KeyboardButton(text=kb_name)]],
+                resize_keyboard=True
+            )
+            await message.answer("Выберите количество продукта", reply_markup=kb_back)
             # Create the inline keyboard with product options
             inline_keyboard = create_inline_keyboard(product_name, quantity)
 
             # Send the product details with image and inline buttons
             await message.answer_photo(image_url, caption=product_caption, reply_markup=inline_keyboard,
                                        parse_mode='HTML')
+            await state.set_state(OrderState.back)
         else:
             await message.answer("Sorry, we couldn't retrieve the product details. Please try again later.")
 
@@ -107,8 +107,26 @@ def create_inline_keyboard(product_name, quantity):
     ])
 
 
+@router.message(OrderState.back)
+async def back_handler(message: Message, state: FSMContext):
+    lang = LanguageMiddleware.get_language(message.from_user.id)
+
+    data = await state.get_data()
+    category = data['category']
+    products = await fetch_products_by_category(category)
+    data = [product['name'] for product in products]
+    data += ["⬅️ Qaytish"] if lang == 'uz' else ["⬅️ Назад"]
+    keyboard = create_default_keyboard(data)
+
+    m_contest = "Maxsulotlar" if lang == 'uz' else "Продукты"
+
+    await message.answer(m_contest, reply_markup=keyboard)
+
+    await state.set_state(OrderState.product)
+
+
 # Callback handler for quantity changes (decrease, increase)
-@router.callback_query(lambda c: c.data.startswith("quantity_"))
+@router.callback_query(OrderState.back, lambda c: c.data.startswith("quantity_"))
 async def handle_quantity_change(callback_query: CallbackQuery, state: FSMContext):
     action = "_".join(callback_query.data.split("_")[:2])
     product_name = callback_query.data.split("_")[2]  # Product name
@@ -154,8 +172,10 @@ async def add_to_cart(callback_query: CallbackQuery, state: FSMContext):
     cart = current_data.get("cart", {})  # Get cart from state or default to empty dictionary
 
     # Update the cart with the selected product and its quantity
-    cart[product_name] = cart.get(product_name, 0) + quantity
-
+    try:
+        cart[product_name] = cart.get(product_name, 0) + quantity
+    except:
+        cart[product_name] = 1
     # Save the updated cart to FSM state
     await state.update_data(cart=cart)
 
@@ -183,7 +203,7 @@ async def add_to_cart(callback_query: CallbackQuery, state: FSMContext):
     data += [category['name'] for category in categories['categories']]
 
     keyboard = create_default_keyboard(data)
-
+    print("confirmation_text: ", confirmation_text)
     await callback_query.message.answer(f"{confirmation_text}", reply_markup=keyboard)
 
     await state.set_state(OrderState.category)

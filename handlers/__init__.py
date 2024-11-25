@@ -12,9 +12,9 @@ from .users import router as users_router
 
 def register_handlers(dp: Router):
     dp.include_router(users_router)
-    dp.include_router(menu_router)
     dp.include_router(order_router)
     dp.include_router(feedback_router)
     dp.include_router(order_history_router)
     dp.include_router(settings_router)
     dp.include_router(rooms_router)
+    dp.include_router(menu_router)

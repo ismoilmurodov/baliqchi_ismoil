@@ -17,12 +17,12 @@ phone_kb_ru = ReplyKeyboardMarkup(keyboard=[
 # O'tkazib yuborish tugmasi uchun klaviatura
 skip_kb = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="❌ O'tkazib yuborish")]
-], resize_keyboard=True, input_field_placeholder="DD-MM-YYYY")
+], resize_keyboard=True, input_field_placeholder="DD-MM-YYYY", one_time_keyboard=True)
 
 # O'tkazib yuborish tugmasi uchun klaviatura (ru)
 skip_kb_ru = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="❌ Пропустить")]
-], resize_keyboard=True, input_field_placeholder="DD-MM-YYYY")
+], resize_keyboard=True, input_field_placeholder="DD-MM-YYYY", one_time_keyboard=True)
 
 # Asosiy menu tugmalari (O'zbek tilida)
 main_menu_kb = ReplyKeyboardMarkup(
@@ -39,7 +39,7 @@ main_menu_kb = ReplyKeyboardMarkup(
             KeyboardButton(text="🏨 Xonalar haqida ma'lumot"),
         ],
     ],
-    resize_keyboard=True
+    resize_keyboard=True,
 )
 
 # Asosiy menu tugmalari (Rus tilida)
@@ -57,5 +57,5 @@ main_menu_kb_ru = ReplyKeyboardMarkup(
             KeyboardButton(text="🏨 Информация о номерах"),
         ],
     ],
-    resize_keyboard=True
+    resize_keyboard=True,
 )
