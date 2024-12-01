@@ -175,4 +175,5 @@ async def go_back_to_main_menu(message: Message, state: FSMContext):
         await message.answer("Bosh menu:", reply_markup=main_menu_kb)
     elif lang == "ru":
         await message.answer("Главное меню:", reply_markup=main_menu_kb_ru)
-    await state.finish()
+    await state.clear()
+

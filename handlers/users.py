@@ -30,11 +30,8 @@ async def choose_language(message: Message, state: FSMContext):
     lang = languages[message.text]
     LanguageMiddleware.set_language(message.from_user.id, lang)
 
-    if lang == "uz":
-        await message.answer("Ismingizni kiriting:", reply_markup=ReplyKeyboardRemove())
-    elif lang == "ru":
-        await message.answer("Введите ваше имя:", reply_markup=ReplyKeyboardRemove())
-
+    message_text = "Ismingizni kiriting:" if lang == 'uz' else "Введите ваше имя:"
+    await message.answer(message_text, reply_markup=ReplyKeyboardRemove())
     await state.set_state(Registration.name)
 
 
@@ -108,10 +105,10 @@ async def ask_birthdate(message: Message, state: FSMContext):
         if not re.match(r"^\d{2}-\d{2}-\d{4}$", birthday):
             if lang == "uz":
                 await message.answer(
-                    "Tug'ilgan sana noto'g'ri formatda! DD-MM-YYYY shaklida kiriting (masalan, 11-08-2003):")
+                    "Tug'ilgan sana noto'g'ri formatda! DD-MM-YYYY shaklida kiriting (masalan, DD-MM-YYYY):")
             elif lang == "ru":
                 await message.answer(
-                    "Дата рождения введена в неправильном формате! Введите в формате DD-MM-YYYY (например, 11-08-2003):")
+                    "Дата рождения введена в неправильном формате! Введите в формате DD-MM-YYYY (например, DD-MM-YYYY):")
             return
         try:
             datetime.strptime(birthday, "%d-%m-%Y")

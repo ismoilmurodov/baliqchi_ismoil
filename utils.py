@@ -18,3 +18,12 @@ def convert_to_yyyy_mm_dd(date_str):
         return date_object.strftime("%Y-%m-%d")
     except ValueError:
         raise ValueError(f"Invalid date format: {date_str}. Expected format is DD-MM-YYYY.")
+
+
+
+# Форматирование товаров в корзине
+def format_order_products(order_products):
+    formatted_order = []
+    for product, quantity in order_products.items():
+        formatted_order.append(f"{quantity} ✖️ {product}")
+    return "\n".join(formatted_order)

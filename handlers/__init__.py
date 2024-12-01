@@ -8,6 +8,7 @@ from .order_history import router as order_history_router
 from .rooms import router as rooms_router
 from .settings import router as settings_router
 from .users import router as users_router
+from .order_process import router as order_process_router
 
 
 def register_handlers(dp: Router):
@@ -18,3 +19,4 @@ def register_handlers(dp: Router):
     dp.include_router(settings_router)
     dp.include_router(rooms_router)
     dp.include_router(menu_router)
+    dp.include_router(order_process_router)

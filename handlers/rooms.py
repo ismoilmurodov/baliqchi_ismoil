@@ -1,19 +1,15 @@
+import requests
 from aiogram import Router
 from aiogram.enums import ParseMode
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message
 
 from handlers.menu import create_default_keyboard
 from keyboards import main_menu_kb, main_menu_kb_ru
 from middlewares import LanguageMiddleware
+from state.menu_state import RoomStateGroup
 
 router = Router()
-
-
-class RoomStateGroup(StatesGroup):
-    cat = State()
-    room = State()
 
 
 @router.message(lambda message: message.text in ["🏨 Xonalar haqida ma'lumot", "🏨 Информация о номерах"])
@@ -25,8 +21,6 @@ async def room_info(message: Message, state: FSMContext):
     response = requests.get(url)
     data = response.json()
     names = [item['name'] for item in data]
-    print(names)
-    print(lang)
 
     if lang == "uz":
         names.append("⬅️ Qaytish")
@@ -39,9 +33,6 @@ async def room_info(message: Message, state: FSMContext):
         await message.answer("Информация о номерах", reply_markup=keyboard)
 
     await state.set_state(RoomStateGroup.cat)
-
-
-import requests
 
 
 @router.message(RoomStateGroup.cat)

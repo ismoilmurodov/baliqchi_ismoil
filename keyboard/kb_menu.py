@@ -1,4 +1,6 @@
+from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 # O'zbek tilidagi tugmalar (Uzbek language buttons)
 location_kb_uz = ReplyKeyboardMarkup(
@@ -28,3 +30,10 @@ location_kb_ru = ReplyKeyboardMarkup(
 
 # Botning barcha tillari
 languages = {"🇺🇿 O'zbek": "uz", "🇷🇺 Русский": "ru"}
+
+
+def create_default_keyboard(kb_buttons_list):
+    keyboard = ReplyKeyboardBuilder()
+    for kb_button in kb_buttons_list:
+        keyboard.add(KeyboardButton(text=kb_button))
+    return keyboard.adjust(1, repeat=True).as_markup(resize_keyboard=True)
